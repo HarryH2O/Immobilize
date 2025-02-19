@@ -1,0 +1,13 @@
+# 控制哪些事件应该被禁用（设为true时允许玩家执行该动作）
+disabled_events:
+  move: false
+  interact: false
+  teleport: false
+  damage: false
+  drop_item: false
+  pickup_item: false
+  entity_damage: false
+  swap_hand: false
+  inventory_open: false
+  inventory_click: false
+  command: false

@@ -1,0 +1,14 @@
+name: Immobilize
+main: com.harry_h2o.immobilize.Immobilize
+version: 1.0.1
+api-version: 1.16
+depend: [ProtocolLib]
+commands:
+  ib:
+    description: 控制实体定身状态
+    usage: /ib <true|false> [实体] [-t:<时间>] [-r:<原因>.<true|false>]
+    permission: immobilize.command
+permissions:
+  immobilize.command:
+    description: 允许玩家使用/ib命令
+    default: op

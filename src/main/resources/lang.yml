@@ -1,0 +1,12 @@
+messages:
+  immobilized_title: "§c您已被定身！"
+  broadcast_reason: "§e玩家 %player% 被定身，原因：%reason%"
+  self_reason: "§e原因：%reason%"
+  time_expired: "§a定身效果已解除"
+  invalid_entity: "§c目标不存在！"
+  invalid_args: "§c&l无效的指令！用法：\n§e/ib <true|false> [目标] [-t:<秒>] [-r:<原因>.<true|false>]\n§e/ib admin reload"
+  invalid_time: "§c时间必须大于0！"
+  no_permission: "§c权限不足！"
+  config_reloaded: "§a配置已重载！"
+  cannot_open_chat: "§c定身状态下无法打开聊天栏"
+  cannot_open_inventory: "§c定身状态下无法打开背包"
