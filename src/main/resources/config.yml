@@ -1,13 +1,36 @@
+# 是否在定身时给予抗性提升效果
+apply_resistance: true #已知在1.21.4版本下该功能会出现bug
+
 # 控制哪些事件应该被禁用（设为true时允许玩家执行该动作）
 disabled_events:
-  move: false
-  interact: false
-  teleport: false
-  damage: false
-  drop_item: false
-  pickup_item: false
-  entity_damage: false
-  swap_hand: false
-  inventory_open: false
-  inventory_click: false
-  command: false
+  # 基础行为限制
+  move: false              # 禁止玩家移动（包括行走/跳跃/游泳）
+  interact: false          # 禁止与方块/物品交互（右键点击行为）
+  teleport: false          # 禁止传送（包括末影珍珠/指令传送）
+  damage: false            # 禁止玩家攻击其他实体（近战/远程攻击）
+  drop_item: false         # 禁止丢弃物品（Q键丢弃）
+  pickup_item: false       # 禁止捡起地面物品
+  entity_damage: false     # 禁止玩家受到伤害（跌落/火焰等环境伤害）
+  swap_hand: false         # 禁止切换主副手物品（F键交换）
+
+  # 背包相关限制
+  inventory_open: false    # 禁止打开背包/容器界面（E键）
+  inventory_click: false   # 禁止操作背包/容器内物品
+
+  # 指令与社交
+  command: false           # 禁止使用非/ib指令（聊天栏命令）
+
+  # 高级行为控制
+  gamemode_change: false   # 禁止切换游戏模式（生存/创造等）
+  toggle_sneak: false      # 禁止切换潜行状态（Shift键）
+  toggle_flight: false     # 禁止切换飞行状态（双击空格）
+  item_held: false         # 禁止切换手持物品栏（数字键/滚轮切换）
+  item_consume: false      # 禁止食用物品（吃东西/喝药水等）
+  interact_entity: false   # 禁止与实体交互（右键点击生物/NPC）
+
+  # 方块操作限制
+  block_break: false       # 禁止破坏方块（左键破坏方块）
+  block_place: false       # 禁止放置方块（右键放置方块）
+
+  # 实体交互限制
+  entity_interact: false   # 禁止与实体交互（如骑马/矿车操作）

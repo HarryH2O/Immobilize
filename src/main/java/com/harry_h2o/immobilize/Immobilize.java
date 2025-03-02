@@ -24,6 +24,9 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -77,12 +80,14 @@ public final class Immobilize extends JavaPlugin implements Listener {
     }
 
     private void printColoredTitle() {
-        String title = "\n" +
-                "§b▓▓-▓-▓-▓-▓-▓-▓-▓-▓-▓-▓▓\n" +
-                "§3▓      §lImmobilize     ▓\n" +
-                "§e▓        §lV1.0.1       ▓\n" +
-                "§3▓     §r§9by Harry_H2O    ▓\n" +
-                "§b▓▓-▓-▓-▓-▓-▓-▓-▓-▓-▓-▓▓\n";
+        String title =
+                "§bImmobilize V1.0.2 正在检查文件完整性...\n" +
+                        "§6 _____     Immobilize V1.0.2     _     _ _ _        \n" +
+                        "§6|_   _|   By Harry_H2O 已启用!  | |   (_) (_)       \n" +
+                        "§6  | |  _ __ ___  _ __ ___   ___ | |__  _| |_ _______\n" +
+                        "§6  | | | '_ ` _ \\| '_ ` _ \\ / _ \\| '_ \\| | | |_  / _ \\\n" +
+                        "§6 _| |_| | | | | | | | | | | (_) | |_) | | | |/ /  __/\n" +
+                        "§6|_____|_| |_| |_|_| |_| |_|\\___/|_.__/|_|_|_/___\\___|\n";
         Bukkit.getConsoleSender().sendMessage(title);
     }
 
@@ -132,6 +137,72 @@ public final class Immobilize extends JavaPlugin implements Listener {
     }
 
     // 事件监听部分
+    @EventHandler
+    public void onEntityInteract(PlayerInteractEntityEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.entity_interact", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        if (!isImmobilized(player)) return; // 快速跳出非定身玩家
+
+        if (!getConfig().getBoolean("disabled_events.block_break", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.block_place", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemConsume(PlayerItemConsumeEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.item_consume", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInteractEntity(PlayerInteractEntityEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.interact_entity", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onGameModeChange(PlayerGameModeChangeEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.gamemode_change", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onToggleSneak(PlayerToggleSneakEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.toggle_sneak", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onToggleFlight(PlayerToggleFlightEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.toggle_flight", false)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemHeld(PlayerItemHeldEvent event) {
+        if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.item_held", false)) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (isImmobilized(event.getPlayer()) && !getConfig().getBoolean("disabled_events.move", false)) {
@@ -363,19 +434,6 @@ public final class Immobilize extends JavaPlugin implements Listener {
         }
     }
 
-    // 解除定身逻辑
-    private void removeResistanceEffect(Player player) {
-        player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-        // 添加瞬时效果确保客户端同步
-        player.addPotionEffect(new PotionEffect(
-                PotionEffectType.DAMAGE_RESISTANCE,
-                1,
-                0,
-                false,
-                false
-        ));
-    }
-
     private List<Entity> parseTargets(CommandSender sender, String selector) {
         if (selector == null || selector.isEmpty()) {
             return Collections.emptyList();
@@ -415,13 +473,29 @@ public final class Immobilize extends JavaPlugin implements Listener {
     }
 
     private void applyResistanceEffect(Player player) {
-        // 抗性提升255级（0xFE为等级标识，实际效果为255级）
-        player.addPotionEffect(new PotionEffect(
-                PotionEffectType.DAMAGE_RESISTANCE,
-                Integer.MAX_VALUE,
-                0xFE, // 等级255
-                false, // 无环境粒子
-                false  // 无图标
-        ));
+        if (getConfig().getBoolean("apply_resistance", true)) {
+            player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.DAMAGE_RESISTANCE,
+                    Integer.MAX_VALUE,
+                    0xFE,
+                    false,
+                    false
+            ));
+        }
+    }
+
+    // 解除定身逻辑
+    private void removeResistanceEffect(Player player) {
+        if (getConfig().getBoolean("apply_resistance", true)) {
+            player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+            // 强制客户端同步
+            player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.DAMAGE_RESISTANCE,
+                    1,
+                    0,
+                    false,
+                    false
+            ));
+        }
     }
 }

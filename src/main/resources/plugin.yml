@@ -1,6 +1,6 @@
 name: Immobilize
 main: com.harry_h2o.immobilize.Immobilize
-version: 1.0.1
+version: 1.0.2
 api-version: 1.16
 depend: [ProtocolLib]
 commands:

@@ -5,7 +5,7 @@
 
     <groupId>com.harry_h2o</groupId>
     <artifactId>Immobilize</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <properties>
